@@ -1,0 +1,14 @@
+## customisation de la police du titre 
+.main-header .logo {
+  font-family: "Georgia", Times, "Times New Roman", serif;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.skin-spotify .main-header {
+  background-color: "#81b71a";
+  font-family: "Georgia", Times, "Times New Roman", serif;
+  font-weight: bold;
+  font-size: 24px;
+}
+
