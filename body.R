@@ -51,7 +51,28 @@ body = function() {
                 /* body */
             .content-wrapper, .right-side {
                  background-color: #000000;
-                                }
+            }
+                                
+                                /* DataTable */
+#caract_titre tbody tr.even {
+    background-color: #000000;
+    color: #000000;
+}
+
+#caract_titre tbody {
+    background-color: #000000;
+    color: #000000;
+}
+ 
+#recommend tbody tr.even {
+    background-color: #000000;
+    color: #000000;
+}
+
+#recommend tbody {
+    background-color: #000000;
+    color: #000000;
+}
                                 '
         )
         )),
@@ -94,7 +115,7 @@ body = function() {
           ),
             
           h1(
-            "Les 20 genres les plus populaires entre 2017 et 2020",
+            "Les genres les plus populaires entre 2017 et 2020",
             style = "text-align: center; color: #81b71a;" ),
           fluidRow(# Liste déroulante du niveau de précision des genres à choisir
             column(width = 5,
@@ -119,6 +140,9 @@ body = function() {
             
           ),
           fluidRow(
+            h1(
+              "Les mots les plus fréquents dans les titres de chanson",
+              style = "text-align: center; color: #81b71a;" ),
             box(
               style = "height:500px;",
               plotOutput(outputId = "cloud_words"),
@@ -180,8 +204,8 @@ body = function() {
                 ),
               box(# Afficher les caractéristiques du titre
                 width = 9,
-                dataTableOutput(outputId = "caract_titre"),
-                background = "black"
+                dataTableOutput(outputId = "caract_titre")
+                #background = "black"
               )
             ),
             
@@ -191,8 +215,9 @@ body = function() {
                 style = "text-align: center; color: #81b71a;" ),
               box(# Afficher les recommendations
                 width = 12,
-                dataTableOutput(outputId = "recommend"),
-                background = "black"
+                dataTableOutput(outputId = "recommend")
+                #background = "black"
+                
             )
            )
            
