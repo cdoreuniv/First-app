@@ -1,4 +1,5 @@
 # Définition des palettes de couleurs
+source("nettoyage.R")
 
 palette1 = brewer.pal(8, "Set2")
 palette2 = brewer.pal(12, "Set3")
@@ -55,7 +56,7 @@ server = function(input, output, session ) {
         scale_fill_manual(values = my_palette) + 
         coord_flip() + 
         labs(
-          title = "Les 20 genres les plus écoutés", 
+          title = "Les 5 genres les plus écoutés", 
           x = "Popularité",
           y = "Genre"
         ) + 
@@ -155,7 +156,7 @@ server = function(input, output, session ) {
       matrix = as.matrix(dtm) 
       words = sort(rowSums(matrix),decreasing=TRUE) 
       df = data.frame(word = names(words),freq=words)
-      wordcloud(words = df$word, freq = df$freq, scale=c(10,0.25),min.freq = 1,
+      wordcloud(words = df$word, freq = df$freq, scale=c(5,0.75),min.freq = 1,
                 max.words=150, random.order=FALSE, rot.per=0.25, 
                 colors=my_palette)
     })
@@ -197,7 +198,7 @@ server = function(input, output, session ) {
       data1 %>%
         group_by(Title = Title) %>%
         filter(Artist == input$artiste) %>%
-        select(Title, danceability, energy, loudness, speechiness, tempo, duration_ms) %>%
+        select(Title, danceability, energy, loudness, speechiness, tempo, duration_s) %>%
         distinct()
   })
   
@@ -297,7 +298,7 @@ server = function(input, output, session ) {
   
   #### Graphique de la densité de "duration_ms" de l'artiste sur l'ensemble des albums des charts ####
   output$duration_art = renderPlotly({
-    ggplot(perform_art(), aes(duration_ms)) +
+    ggplot(perform_art(), aes(duration_s)) +
       geom_histogram(bins = 6, fill = "#57d53b", color = "#FFFFFF") +
       #geom_density()+
       labs(
@@ -334,19 +335,22 @@ server = function(input, output, session ) {
                 Loudness = mean(loudness), 
                 Speechiness = mean(speechiness), 
                 Tempo = mean(tempo), 
-                Duration = mean(duration_ms))
+                Duration = mean(duration_s))
     )
   
-  datatitre = 
-    data1 %>%
-    group_by(Title = Title, Artist = Artist, Album = Album, Genre = Genre_new) %>%
-    summarise(Danceability = mean(danceability), 
-              Popularity = sum(Popularity),
-              Energy = mean(energy), 
-              Loudness = mean(loudness), 
-              Speechiness = mean(speechiness), 
-              Tempo = mean(tempo), 
-              Duration = mean(duration_ms))
+  output$caract_titre = renderDataTable(carac_chanson(),
+                                        options = list(
+                                          searching = FALSE,
+                                          ordering = FALSE,
+                                          paging = FALSE,
+                                          pageLength = 1,
+                                          stripe = FALSE,
+                                        style = list(
+                                          'background-color' = '#000000', # Fond noir
+                                          'color' = '#FFFFFF' # Texte blanc
+                                        )))
+
+  
   
 euclidean_distance = reactive({
     m = length(datatitre[,5:11])
@@ -368,19 +372,23 @@ euclidean_distance = reactive({
     return(res)
   })
 
-output$caract_titre = renderDataTable(carac_chanson(),
-                                       options = list(
-                                        searching = FALSE,
-                                        ordering = FALSE,
-                                        paging = FALSE,
-                                        pageLength = 1))
 
-output$recommend = renderDataTable(euclidean_distance()[2:11,],
+
+output$recommend = renderDataTable(euclidean_distance()[2:6,],
                                       options = list(
                                         searching = FALSE,
                                         ordering = FALSE,
                                         paging = FALSE,
-                                        pageLength = 1))
+                                        pageLength = 1,
+                                        stripe = FALSE,
+                                        #"page" = list("background-color" = "#000000"),
+                                        # Set font color to white
+                                       # "search" = list("color" = "#FFFFFF"),
+                                        #"length_menu" = list("color" = "#FFFFFF"),
+                                        "info" = list("color" = "#FFFFFF"),
+                                        "paginate" = list("color" = "#FFFFFF", "background-color" = "#000000")
+                                     )
+)
 }
 
 

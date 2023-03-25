@@ -1,22 +1,37 @@
+# =============================================================================#
+# Préparation de la base de données pour les analyses portées 
+# Création de base de données secondaires utilisées dans les fonctions ui et server
+# =============================================================================#
+
+# ------------- Récupération de la base de données brutes ------------- # 
 data1 = read.csv2("data/Final database.csv", sep = ",", dec = ".")
 
-# Récupération du nom des colonnes
-columnsnames = colnames(data1)
-columnsnames
+# ------------- Récupération du nom des colonnes ------------- #
+## Pas forcément nécessaire dans cette étude mais toujours intéressant d'observer le contenu d'une base de données
 
+#columnsnames = colnames(data1)
+#columnsnames
+
+# ------------- Retrait des lignes contenat des anomalies ------------- #
 data1 = data1 %>%
   filter(Uri != "#", danceability != "n")
 
+# ------------- Retrait des colonnes non nécessaires pour notre étude ------------- #
+
 data1 = data1[,c(1:56,113:151)]
+
+# ------------- Recodage des variables numériques ------------- #
 data1$Popularity = as.numeric(data1$Popularity)
 data1[,14:25] = lapply(data1[,14:25],FUN = as.numeric)
 data1 = na.omit(data1)
 
-# Regrouper les valeurs mondiales
+data1$duration_s = data1$duration_ms / 1000
+
+# ------------- Regrouper les valeurs mondiales ------------- #
 dataglob = data1 %>%
   filter(Country == "Global")
 
-# Retirer les valeurs mondiales
+# ------------- Retirer les valeurs mondiales ------------- # 
 data1 = data1 %>%
   filter(Country != "Global") %>%
   arrange(Artist)
@@ -26,7 +41,7 @@ data1 = data1 %>%
 datagenre1 = data1 %>%
   group_by(Genre = Genre_new) %>%
   summarise(Popularite = sum(Popularity)) %>%
-  top_n(20, wt = Popularite) %>%
+  top_n(5, wt = Popularite) %>%
   arrange(desc(Popularite))
 # datagenre1
 
@@ -84,7 +99,13 @@ nb_al = edshe_al %>%
 max_al = max(edshe_al$Popularite)
 best_al = edshe_al[edshe_al$Popularite == max_al,]
 
-
-
-
-
+datatitre = 
+  data1 %>%
+  group_by(Title = Title, Artist = Artist, Album = Album, Genre = Genre_new) %>%
+  summarise(Danceability = mean(danceability), 
+            Popularity = sum(Popularity),
+            Energy = mean(energy), 
+            Loudness = mean(loudness), 
+            Speechiness = mean(speechiness), 
+            Tempo = mean(tempo), 
+            Duration = mean(duration_s))

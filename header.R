@@ -1,7 +1,7 @@
 header = function() {
   dashboardHeader(
     # Titre
-    title = "Charts Spotify 2017-20",
+    title = "Charts Spotify",
     
     # Menu tâches accomplies
     dropdownMenu(
