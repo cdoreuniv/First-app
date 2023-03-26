@@ -26,10 +26,12 @@ server = function(input, output, session ) {
       coord_flip() + 
       labs(
         title = "Les 20 artistes les plus écoutés", 
-        x = "Artistes",
         y = "Popularité"
       ) + 
-      theme_classic() +
+      theme( axis.title.y = element_blank(),
+             panel.background = element_rect(fill = "#FFFFFF"),
+             panel.grid = element_blank()
+             ) +
       guides(fill = "none")
   })
   
@@ -57,10 +59,12 @@ server = function(input, output, session ) {
         coord_flip() + 
         labs(
           title = "Les 5 genres les plus écoutés", 
-          x = "Popularité",
-          y = "Genre"
+          y = "Popularité"
         ) + 
-        theme_classic() +
+        theme( axis.title.y = element_blank(),
+               panel.background = element_rect(fill = "#FFFFFF"),
+               panel.grid = element_blank()
+        ) +
         guides(fill = "none")
     } else {
       ggplot(datagenre2, 
@@ -73,10 +77,12 @@ server = function(input, output, session ) {
         coord_flip() + 
         labs(
           title = "Les 20 genres les plus écoutés", 
-          x = "Popularité",
-          y = "Genre"
+          y = "Popularité"
         ) + 
-        theme_classic() +
+        theme( axis.title.y = element_blank(),
+               panel.background = element_rect(fill = "#FFFFFF"),
+               panel.grid = element_blank()
+        ) +
         guides(fill = "none")
     }
   })
